@@ -36,7 +36,7 @@
           <v-spacer />
 
           <v-toolbar-items>
-            <v-btn icon color="red">
+            <v-btn icon>
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
             <v-btn icon>
@@ -52,40 +52,59 @@
           <v-tabs-items v-model="tab" class="pt-4">
             <!-- Front -->
             <v-tab-item>
-              <v-container class="d-flex justify-center">
-                <v-progress-circular
-                  :size="100"
-                  color="primary"
-                  :value="frontRebound * 4"
-                  style="transform: scaleX(-1)"
-                >
-                  <span style="transform: scaleX(-1)">{{ frontRebound }}</span>
-                </v-progress-circular>
-              </v-container>
+              <circular-slider max="22" title="Rebound"></circular-slider>
+              <circular-slider max="22" title="Compression"></circular-slider>
 
-              <v-container>
-                <v-slider v-model="frontRebound" min="0" max="25"></v-slider>
-              </v-container>
+              <v-row class="justify-center mt-6">
+                <v-col cols="8">
+                  <v-text-field
+                    label="Air Pressure"
+                    filled
+                    dense
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-row class="justify-center">
+                <v-col cols="8">
+                  <v-text-field label="Spring Rate" filled dense></v-text-field>
+                </v-col>
+              </v-row>
             </v-tab-item>
 
             <!-- Rear -->
-            <v-tab-item></v-tab-item>
+            <v-tab-item>
+              <circular-slider
+                max="22"
+                title="Low Speed Compression"
+              ></circular-slider>
+              <circular-slider
+                max="22"
+                title="High Speed Compression"
+              ></circular-slider>
+
+              <circular-slider max="22" title="Rebound"></circular-slider>
+
+              <v-row class="justify-center">
+                <v-col cols="8">
+                  <v-text-field label="Shock" filled dense></v-text-field>
+                </v-col>
+              </v-row>
+            </v-tab-item>
           </v-tabs-items>
         </v-tabs>
-
-        <v-card-text> </v-card-text>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
+import CircularSlider from "../components/CircularSlider.vue";
 export default {
+  components: { CircularSlider },
   data: () => ({
     showSetupDialog: false,
     tab: null,
-
-    frontRebound: 0,
   }),
 
   methods: {
