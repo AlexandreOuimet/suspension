@@ -19,12 +19,12 @@
       </v-list-item-group>
     </v-list>
 
-    <v-btn fab fixed bottom right color="primary">
+    <v-btn fab fixed bottom right color="primary" @click="openDialog(null)">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
 
-    <v-dialog v-model="dialog" fullscreen>
-      <setup-form @close="dialog = false" :item="selectedItem"></setup-form>
+    <v-dialog v-model="dialog" v-if="dialog" fullscreen>
+      <setup-form @close="closeDialog" :setupId="selectedItem"></setup-form>
     </v-dialog>
   </v-container>
 </template>
@@ -53,6 +53,10 @@ export default {
     openDialog(setupId) {
       this.selectedItem = setupId;
       this.dialog = true;
+    },
+
+    closeDialog() {
+      this.dialog = false;
     },
   },
 };

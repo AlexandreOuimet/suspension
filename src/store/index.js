@@ -12,13 +12,14 @@ const store = new Vuex.Store({
         description: "Un setup de ste-élie, la piste était belle et sèche",
         favorite: false,
         fork: {
-          forkRebound: 10,
-          forkCompression: 18,
+          rebound: 10,
+          compression: 18,
+          airPressure: 90,
         },
         shock: {
-          shockRebound: 4,
-          shockLowComp: 2.5,
-          shockHighComp: 3,
+          rebound: 4,
+          lowComp: 2.5,
+          highComp: 3,
         },
       },
       {
@@ -27,13 +28,14 @@ const store = new Vuex.Store({
         description: "Un setup de ste-julie, la piste était belle et sèche",
         favorite: true,
         fork: {
-          forkRebound: 8,
-          forkCompression: 12,
+          rebound: 8,
+          compression: 12,
+          airPressure: 87,
         },
         shock: {
-          shockRebound: 8,
-          shockLowComp: 2,
-          shockHighComp: 1,
+          rebound: 8,
+          lowComp: 2,
+          highComp: 1,
         },
       },
     ],
@@ -46,6 +48,25 @@ const store = new Vuex.Store({
 
     setup: (state) => (id) => {
       return state.setups.find((setup) => setup.id === id);
+    },
+  },
+
+  mutations: {
+    UPDATE_SETUP(state, setup) {
+      console.log("updateSetup", setup);
+    },
+
+    CREATE_SETUP(state, setup) {
+      console.log("createSetup", setup);
+      setup.id = Date.now();
+      state.setups.push(setup);
+    },
+  },
+
+  actions: {
+    saveSetup(context, setup) {
+      if (setup.id != null) context.commit("UPDATE_SETUP", setup);
+      else context.commit("CREATE_SETUP", setup);
     },
   },
 });
