@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import pathify from "./pathify";
 
 Vue.use(Vuex);
 
@@ -8,6 +7,7 @@ const store = new Vuex.Store({
   state: {
     setups: [
       {
+        id: 654345,
         title: "Ste-Élie setup",
         description: "Un setup de ste-élie, la piste était belle et sèche",
         favorite: false,
@@ -22,6 +22,7 @@ const store = new Vuex.Store({
         },
       },
       {
+        id: 2342212,
         title: "Ste-Julie setup",
         description: "Un setup de ste-julie, la piste était belle et sèche",
         favorite: true,
@@ -37,9 +38,16 @@ const store = new Vuex.Store({
       },
     ],
   },
-  modules: {},
 
-  plugins: [pathify.plugin],
+  getters: {
+    setups: (state) => {
+      return state.setups;
+    },
+
+    setup: (state) => (id) => {
+      return state.setups.find((setup) => setup.id === id);
+    },
+  },
 });
 
 export default store;

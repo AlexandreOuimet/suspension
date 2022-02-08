@@ -1,8 +1,12 @@
 <template>
   <v-container>
     <v-list two-line>
-      <v-list-item-group v-model="selectedItem" color="primary">
-        <v-list-item v-for="(setup, i) in setups" :key="i">
+      <v-list-item-group color="primary">
+        <v-list-item
+          v-for="setup in setups"
+          :key="setup.id"
+          @click.stop="openDialog(setup.id)"
+        >
           <v-list-item-content>
             <v-list-item-title>{{ setup.title }}</v-list-item-title>
             <v-list-item-subtitle>{{ setup.description }}</v-list-item-subtitle>
@@ -18,23 +22,37 @@
     <v-btn fab fixed bottom right color="primary">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
+
+    <v-dialog v-model="dialog" fullscreen>
+      <setup-form @close="dialog = false" :item="selectedItem"></setup-form>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
-import { sync } from "vuex-pathify";
+import SetupForm from "../components/SetupForm.vue";
 
 export default {
-  components: {},
+  components: {
+    SetupForm,
+  },
+
   data: () => ({
     selectedItem: null,
+    dialog: false,
+    radius: 40,
+    width: 10,
+    setups: {},
   }),
 
-  computed: { setups: sync("setups") },
+  created() {
+    this.setups = this.$store.getters["setups"];
+  },
 
   methods: {
-    log() {
-      console.log("Logging : ", this.setups);
+    openDialog(setupId) {
+      this.selectedItem = setupId;
+      this.dialog = true;
     },
   },
 };
