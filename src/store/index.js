@@ -5,68 +5,93 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    setups: [
-      {
-        id: 654345,
-        title: "Ste-Élie setup",
-        description: "Un setup de ste-élie, la piste était belle et sèche",
-        favorite: false,
-        fork: {
-          rebound: 10,
-          compression: 18,
-          airPressure: 90,
-        },
-        shock: {
-          rebound: 4,
-          lowComp: 2.5,
-          highComp: 3,
-        },
-      },
-      {
-        id: 2342212,
-        title: "Ste-Julie setup",
-        description: "Un setup de ste-julie, la piste était belle et sèche",
-        favorite: true,
-        fork: {
-          rebound: 8,
-          compression: 12,
-          airPressure: 87,
-        },
-        shock: {
-          rebound: 8,
-          lowComp: 2,
-          highComp: 1,
-        },
-      },
-    ],
+    setup: {},
+    setups: [],
   },
 
   getters: {
-    setups: (state) => {
-      return state.setups;
+    setup: (state) => {
+      return state.setup;
     },
 
-    setup: (state) => (id) => {
-      return state.setups.find((setup) => setup.id === id);
+    setups: (state) => {
+      return state.setups;
     },
   },
 
   mutations: {
-    UPDATE_SETUP(state, setup) {
-      console.log("updateSetup", setup);
+    CREATE_SETUP(state, setup) {
+      state.setups.push(setup);
     },
 
-    CREATE_SETUP(state, setup) {
-      console.log("createSetup", setup);
-      setup.id = Date.now();
-      state.setups.push(setup);
+    UPDATE_SETUP(state, setup) {
+      const index = state.setups.findIndex((x) => x.id == setup.id);
+      state.setups[index] = setup;
+    },
+
+    DELETE_SETUP(state, setup) {
+      const index = state.setups.findIndex((x) => x.id == setup.id);
+      state.setups.splice(index, 1);
+    },
+
+    SET_CURRENT_SETUP(state, setup) {
+      state.setup = setup;
+    },
+
+    TRIGGER_FAVORITE(state, setup) {
+      const index = state.setups.findIndex((x) => x.id == setup.id);
+      state.setups[index].favorite
+        ? (state.setups[index].favorite = false)
+        : (state.setups[index].favorite = true);
+    },
+
+    RESET_SETUP(state) {
+      state.setup = {
+        id: "",
+        title: "",
+        description: "",
+        favorite: false,
+        fork: {
+          rebound: 0,
+          compression: 0,
+          airPressure: 0,
+        },
+        shock: {
+          rebound: 0,
+          lowComp: 0,
+          highComp: 0,
+        },
+      };
     },
   },
 
   actions: {
+    setCurrentSetup(context, setupId) {
+      if (setupId == -1) {
+        context.commit("RESET_SETUP");
+      } else {
+        context.commit(
+          "SET_CURRENT_SETUP",
+          context.state.setups.find((x) => x.id === setupId)
+        );
+      }
+    },
+
     saveSetup(context, setup) {
-      if (setup.id != null) context.commit("UPDATE_SETUP", setup);
-      else context.commit("CREATE_SETUP", setup);
+      if (setup.id == "") {
+        setup.id = Date.now();
+        context.commit("CREATE_SETUP", setup);
+      } else {
+        context.commit("UPDATE_SETUP", setup);
+      }
+    },
+
+    deleteSetup(context, setup) {
+      context.commit("DELETE_SETUP", setup);
+    },
+
+    triggerFavorite(context, setup) {
+      context.commit("TRIGGER_FAVORITE", setup);
     },
   },
 });

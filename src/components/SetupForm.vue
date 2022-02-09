@@ -1,104 +1,125 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
+    <v-toolbar color="primary" dark dense>
       <v-btn icon @click.stop="dialog = false">
         <v-icon @click="closeDialog">mdi-arrow-left</v-icon>
       </v-btn>
       <v-spacer />
-      <v-btn icon>
-        <v-icon @click.prevent="setup.favorite = !setup.favorite">{{
-          setup.favorite ? "mdi-star" : "mdi-star-plus-outline"
-        }}</v-icon>
+      <v-btn v-if="setup.id != ''" text color="error" @click="deleteSetup">
+        Delete
       </v-btn>
-      <v-btn text @click="save"> Save </v-btn>
+      <v-btn text @click="saveSetup"> Save </v-btn>
     </v-toolbar>
 
-    <v-container>
-      <v-text-field v-model="title" label="Title" solo></v-text-field>
-      <v-textarea v-model="description" label="Description" solo></v-textarea>
+    <v-form ref="form">
+      <v-container>
+        <v-text-field
+          v-model="setup.title"
+          label="Title"
+          solo
+          :rules="titleRule"
+        ></v-text-field>
+        <v-textarea
+          v-model="setup.description"
+          label="Description"
+          solo
+        ></v-textarea>
 
-      <h3>FORK</h3>
+        <h3>FORK</h3>
 
-      <v-row class="justify-center" no-gutters>
-        <v-col class="text-center">
-          <span class="text-overline">Rebound</span>
-          <v-container class="d-flex justify-center">
-            <round-slider
-              v-model="forkRebound"
-              max="22"
-              :radius="radius"
-              :width="width"
-            ></round-slider>
-          </v-container>
-        </v-col>
+        <v-row class="justify-center" no-gutters>
+          <v-col class="text-center">
+            <span class="text-overline">Rebound</span>
+            <v-container class="d-flex justify-center">
+              <round-slider
+                v-model="setup.fork.rebound"
+                max="22"
+                :radius="radius"
+                :width="width"
+                :rangeColor="secondary"
+                :tooltipColor="accent"
+              ></round-slider>
+            </v-container>
+          </v-col>
 
-        <v-col class="text-center">
-          <span class="text-overline">Compression</span>
-          <v-container class="d-flex justify-center">
-            <round-slider
-              v-model="forkCompression"
-              max="15"
-              :radius="radius"
-              :width="width"
-            ></round-slider>
-          </v-container>
-        </v-col>
+          <v-col class="text-center">
+            <span class="text-overline">Compression</span>
+            <v-container class="d-flex justify-center">
+              <round-slider
+                v-model="setup.fork.compression"
+                max="15"
+                :radius="radius"
+                :width="width"
+                :rangeColor="secondary"
+                :tooltipColor="accent"
+              ></round-slider>
+            </v-container>
+          </v-col>
 
-        <v-col class="text-center">
-          <span class="text-overline">Air Pressure</span>
-          <v-container class="d-flex justify-center">
-            <round-slider
-              v-model="forkAirPressure"
-              max="110"
-              :radius="radius"
-              :width="width"
-            ></round-slider>
-          </v-container>
-        </v-col>
-      </v-row>
-    </v-container>
+          <v-col class="text-center">
+            <span class="text-overline">Air Pressure</span>
+            <v-container class="d-flex justify-center">
+              <round-slider
+                v-model="setup.fork.airPressure"
+                max="110"
+                :radius="radius"
+                :width="width"
+                :rangeColor="secondary"
+                :tooltipColor="accent"
+              ></round-slider>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
 
-    <v-container>
-      <h3>SHOCK</h3>
+      <v-container>
+        <h3>SHOCK</h3>
 
-      <v-row class="justify-center" no-gutters>
-        <v-col class="text-center">
-          <span class="text-overline">Rebound</span>
-          <v-container class="d-flex justify-center">
-            <round-slider
-              v-model="shockRebound"
-              max="20"
-              :radius="radius"
-              :width="width"
-            ></round-slider>
-          </v-container>
-        </v-col>
+        <v-row class="justify-center" no-gutters>
+          <v-col class="text-center">
+            <span class="text-overline">Rebound</span>
+            <v-container class="d-flex justify-center">
+              <round-slider
+                v-model="setup.shock.rebound"
+                max="20"
+                :radius="radius"
+                :width="width"
+                :rangeColor="secondary"
+                :tooltipColor="accent"
+              ></round-slider>
+            </v-container>
+          </v-col>
 
-        <v-col class="text-center">
-          <span class="text-overline">Low Comp</span>
-          <v-container class="d-flex justify-center">
-            <round-slider
-              v-model="shockLowComp"
-              max="5"
-              :radius="radius"
-              :width="width"
-            ></round-slider>
-          </v-container>
-        </v-col>
+          <v-col class="text-center">
+            <span class="text-overline">Low Comp</span>
+            <v-container class="d-flex justify-center">
+              <round-slider
+                v-model="setup.shock.lowComp"
+                max="5"
+                :radius="radius"
+                :width="width"
+                :rangeColor="secondary"
+                :tooltipColor="accent"
+              ></round-slider>
+            </v-container>
+          </v-col>
 
-        <v-col class="text-center">
-          <span class="text-overline">High Comp</span>
-          <v-container class="d-flex justify-center">
-            <round-slider
-              v-model="shockHighComp"
-              max="3"
-              :radius="radius"
-              :width="width"
-            ></round-slider>
-          </v-container>
-        </v-col>
-      </v-row>
-    </v-container>
+          <v-col class="text-center">
+            <span class="text-overline">High Comp</span>
+            <v-container class="d-flex justify-center">
+              <round-slider
+                v-model="setup.shock.highComp"
+                max="3"
+                :radius="radius"
+                :width="width"
+                :rangeColor="secondary"
+                :tooltipColor="accent"
+              ></round-slider>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-form>
   </v-card>
 </template>
 
@@ -110,61 +131,24 @@ export default {
     RoundSlider,
   },
 
-  props: {
-    setupId: Number,
-  },
-
   data: () => ({
     radius: 40,
     width: 10,
-
-    title: "",
-    description: "",
-    favorite: "",
-    forkRebound: "",
-    forkCompression: "",
-    forkAirPressure: "",
-    shockRebound: "",
-    shockLowComp: "",
-    shockHighComp: "",
+    setup: {},
+    titleRule: [(v) => !!v || "Title is required"],
   }),
 
-  mounted() {
-    if (this.setupId != null) {
-      this.title = this.setup.title;
-      this.description = this.setup.description;
-      this.forkRebound = this.setup.fork.rebound;
-      this.favorite = this.setup.favorite;
-      this.forkCompression = this.setup.fork.compression;
-      this.forkAirPressure = this.setup.fork.airPressure;
-      this.shockRebound = this.setup.shock.rebound;
-      this.shockLowComp = this.setup.shock.lowComp;
-      this.shockHighComp = this.setup.shock.highComp;
-    }
+  created() {
+    this.setup = this.$store.getters["setup"];
   },
 
   computed: {
-    setup() {
-      return this.$store.getters.setup(this.setupId);
+    secondary() {
+      return this.$vuetify.theme.themes.light.secondary;
     },
 
-    updatedSetup() {
-      return {
-        id: this.setupId,
-        title: this.title,
-        description: this.description,
-        favorite: this.favorite,
-        fork: {
-          rebound: this.forkRebound,
-          compression: this.forkCompression,
-          airPressure: this.airPressure,
-        },
-        shock: {
-          rebound: this.shockRebound,
-          lowComp: this.shockLowComp,
-          highComp: this.shockHighComp,
-        },
-      };
+    accent() {
+      return this.$vuetify.theme.themes.light.accent;
     },
   },
 
@@ -173,8 +157,14 @@ export default {
       this.$emit("close");
     },
 
-    save() {
-      this.$store.dispatch("saveSetup", this.updatedSetup);
+    saveSetup() {
+      if (!this.$refs.form.validate()) return;
+      this.$store.dispatch("saveSetup", this.setup);
+      this.$emit("close");
+    },
+
+    deleteSetup() {
+      this.$store.dispatch("deleteSetup", this.setup);
       this.$emit("close");
     },
   },
