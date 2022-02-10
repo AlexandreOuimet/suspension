@@ -28,21 +28,40 @@
     </v-btn>
 
     <v-dialog v-model="dialog" v-if="dialog" fullscreen>
-      <setup-form @close="closeDialog"></setup-form>
+      <setup-form @close="closeSetupDialog"></setup-form>
+    </v-dialog>
+
+    <v-dialog v-model="loginDialog" v-if="loginDialog" fullscreen>
+      <login-form
+        v-if="!showRegister"
+        @close="closeLoginDialog"
+        @register="showRegister = true"
+      ></login-form>
+      <register-form
+        v-else
+        @createAccount="createAccount"
+        @login="showRegister = false"
+      ></register-form>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
 import SetupForm from "../components/SetupForm.vue";
+import LoginForm from "../components/LoginForm.vue";
+import RegisterForm from "../components/RegisterForm.vue";
 
 export default {
   components: {
     SetupForm,
+    LoginForm,
+    RegisterForm,
   },
 
   data: () => ({
     dialog: false,
+    loginDialog: true,
+    showRegister: false,
     setups: {},
   }),
 
@@ -56,9 +75,17 @@ export default {
       this.dialog = true;
     },
 
-    closeDialog() {
+    closeSetupDialog() {
       this.dialog = false;
       this.$store.dispatch("setCurrentSetup", -1);
+    },
+
+    closeLoginDialog() {
+      this.loginDialog = false;
+    },
+
+    createAccount() {
+      this.closeLoginDialog();
     },
 
     triggerFavorite(setup) {
