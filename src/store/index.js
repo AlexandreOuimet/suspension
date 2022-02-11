@@ -81,6 +81,7 @@ const store = new Vuex.Store({
       if (setup.id == "") {
         setup.id = Date.now();
         context.commit("CREATE_SETUP", setup);
+        console.log(JSON.stringify(setup));
       } else {
         context.commit("UPDATE_SETUP", setup);
       }
