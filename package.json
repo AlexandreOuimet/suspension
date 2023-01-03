@@ -10,6 +10,7 @@
   "dependencies": {
     "chokidar": "^3.5.3",
     "core-js": "^3.6.5",
+    "firebase": "^9.15.0",
     "vue": "^2.6.11",
     "vue-round-slider": "^1.0.1",
     "vue-router": "^3.2.0",
